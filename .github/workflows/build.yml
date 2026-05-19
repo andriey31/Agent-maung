@@ -20,22 +20,21 @@ jobs:
         run: |
           cat > buildozer.spec << 'EOF'
           [app]
-title = AGENT MAUNG BODAS
-package.name = maungbodas
-package.domain = com.maung.bodas
-source.dir = .
-source.include_exts = py,png,jpg,ttf  # <-- Pastikan ada tulisan png disini!
-version = 1.0
-requirements = python3,kivy,flask,jinja2,markupsafe,itsdangerous,click,blinker,android
-android.permissions = INTERNET, ACCESS_NETWORK_STATE, SYSTEM_ALERT_WINDOW
-android.api = 34
-android.ndk = 26b
-android.archs = arm64-v8a, armeabi-v7a
-android.accept_sdk_license = True
-android.orientation = portrait  # <-- Kunci layar tegak
-android.private_storage = True
-android.enable_androidx = True
-android.meta-data = android.allow_backup=true
+          title = AGENT MAUNG BODAS
+          package.name = maungbodas
+          package.domain = com.maung.bodas
+          source.dir = .
+          source.include_exts = py,png,jpg,ttf
+          version = 1.0
+          requirements = python3,kivy,flask,jinja2,markupsafe,itsdangerous,click,blinker,android
+          android.permissions = INTERNET, ACCESS_NETWORK_STATE, SYSTEM_ALERT_WINDOW
+          android.api = 34
+          android.ndk = 26b
+          android.archs = arm64-v8a, armeabi-v7a
+          android.accept_sdk_license = True
+          android.orientation = portrait
+          android.private_storage = True
+          android.enable_androidx = True
           EOF
 
       - name: Proses Rakit APK
@@ -47,5 +46,5 @@ android.meta-data = android.allow_backup=true
         if: success()
         uses: actions/upload-artifact@v4
         with:
-          name: AGENT_MAUNG_FIX
+          name: AGENT_MAUNG_FULL
           path: bin/*.apk
