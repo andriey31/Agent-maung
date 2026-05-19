@@ -4,31 +4,36 @@ on:
 
 jobs:
   bikin_apk:
-    runs-on: ubuntu-22.04  # Pakai versi Ubuntu yang paling stabil
+    runs-on: ubuntu-22.04
+    env:
+      # PENTING: Paksa simpan di folder kerja kita, biar izin aman
+      ANDROID_SDK: ${{ github.workspace }}/sdk
+      ANDROID_NDK: ${{ github.workspace }}/ndk
     steps:
-      - name: Ambil kode proyek
+      - name: Ambil kode
         uses: actions/checkout@v4
 
-      - name: Pasang alat lengkap
+      - name: Pasang alat dasar
         run: |
           sudo apt update -y
-          sudo apt install -y git wget zip unzip openjdk-11-jdk python3-pip build-essential libssl-dev zlib1g-dev libffi-dev
-          pip install --upgrade pip setuptools wheel
-          pip install buildozer==1.4.0 cython==0.29.36  # Versi yang paling aman dan kompatibel
+          sudo apt install -y git zip unzip openjdk-11-jdk python3-pip build-essential libssl-dev zlib1g-dev libffi-dev
+          pip install --upgrade pip
+          pip install buildozer==1.5.0 cython==0.29.36
 
-      - name: Siapkan lingkungan
+      - name: Bikin folder tempat simpan SDK (aman & izin penuh)
         run: |
-          echo "export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64" >> ~/.bashrc
-          echo "export ANDROID_API=33" >> ~/.bashrc
-          source ~/.bashrc
+          mkdir -p $ANDROID_SDK
+          mkdir -p $ANDROID_NDK
+          echo "ANDROID_SDK=$ANDROID_SDK" >> $GITHUB_ENV
+          echo "ANDROID_NDK=$ANDROID_NDK" >> $GITHUB_ENV
 
-      - name: Proses bikin APK
+      - name: Mulai bikin APK
         run: |
           buildozer android debug --verbose
 
-      - name: Simpan hasil jadi
+      - name: Simpan hasil
         if: success()
         uses: actions/upload-artifact@v4
         with:
-          name: AGENT_MAUNG_APK_BERHASIL
+          name: AGENT_MAUNG_BERHASIL
           path: bin/*.apk
