@@ -6,34 +6,42 @@ jobs:
   bikin_apk:
     runs-on: ubuntu-22.04
     env:
-      USER: runner
       HOME: /home/runner
-      # Semua disimpan di sini, aman penuh izin
-      ANDROID_SDK_HOME: /home/runner/sdk
-      BUILDOZER_CACHE_DIR: /home/runner/cache
+      ANDROID_SDK_ROOT: /home/runner/android-sdk
     steps:
       - name: Ambil kode proyek
         uses: actions/checkout@v4
 
-      - name: Pasang semua alat lengkap
+      - name: Pasang alat dasar lengkap
         run: |
           sudo apt update -y
-          sudo apt install -y git wget zip unzip openjdk-11-jdk python3-pip python3-venv build-essential libssl-dev zlib1g-dev libffi-dev
-          python3 -m pip install --upgrade pip setuptools wheel
-          python3 -m pip install --no-cache-dir buildozer==1.5.0 cython==0.29.36
+          sudo apt install -y git wget zip unzip openjdk-11-jdk python3-pip build-essential libssl-dev zlib1g-dev libffi-dev
+          pip install --upgrade pip
+          pip install buildozer==1.4.0 cython==0.29.36
 
-      - name: Siapkan folder kerja aman
+      - name: Pasang Android SDK Manager Secara Manual
         run: |
-          mkdir -p $HOME/sdk $HOME/cache $HOME/work
-          chmod -R 777 $HOME  # Beri izin penuh ke semua folder kita
+          # Unduh alat SDK yang hilang itu
+          mkdir -p $ANDROID_SDK_ROOT
+          wget -q https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip
+          unzip -q commandlinetools-linux-11076708_latest.zip -d $ANDROID_SDK_ROOT
+          # Masukkan ke jalur sistem biar terbaca
+          echo "PATH=$PATH:$ANDROID_SDK_ROOT/cmdline-tools/bin:$ANDROID_SDK_ROOT/platform-tools" >> ~/.bashrc
+          source ~/.bashrc
 
-      - name: Jalankan pembuatan APK
+      - name: Siapkan izin dan lokasi
         run: |
-          buildozer android debug --verbose --no-copy-libs
+          chmod -R 777 $HOME
+          export ANDROID_HOME=$ANDROID_SDK_ROOT
+          export ANDROID_SDK=$ANDROID_SDK_ROOT
 
-      - name: Simpan hasil jika sukses
+      - name: Jalankan Buildozer
+        run: |
+          buildozer android debug --verbose
+
+      - name: Simpan Hasil
         if: success()
         uses: actions/upload-artifact@v4
         with:
-          name: AGENT_MAUNG_AKHIR
+          name: AGENT_MAUNG_BERHASIL
           path: bin/*.apk
