@@ -6,7 +6,8 @@ jobs:
   bikin_apk:
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v4
+      - name: Ambil Kode
+        uses: actions/checkout@v4
 
       - name: Pasang Alat
         run: |
@@ -15,7 +16,7 @@ jobs:
           pip install --upgrade pip
           pip install buildozer==1.5.0 cython==3.0.11
 
-      - name: Pengaturan
+      - name: Buat Pengaturan
         run: |
           cat > buildozer.spec << 'EOF'
 [app]
@@ -33,12 +34,12 @@ android.archs = arm64-v8a, armeabi-v7a
 android.accept_sdk_license = True
 EOF
 
-      - name: Proses Bikin
+      - name: Proses Rakit
         run: |
           export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
           buildozer android debug --verbose
 
-      - name: Simpan
+      - name: Simpan Hasil
         if: success()
         uses: actions/upload-artifact@v4
         with:
