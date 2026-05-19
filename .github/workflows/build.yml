@@ -16,7 +16,7 @@ jobs:
           pip install --upgrade pip
           pip install buildozer==1.5.0 cython==3.0.11
 
-      - name: Bikin Berkas Pengaturan (WAJIB DULUAN!)
+      - name: Buat Berkas Pengaturan
         run: |
           cat > buildozer.spec << 'EOF'
 [app]
@@ -33,9 +33,6 @@ android.ndk = 26b
 android.archs = arm64-v8a, armeabi-v7a
 android.accept_sdk_license = True
 EOF
-
-      - name: Cek Berkas Ada atau Tidak
-        run: ls -la
 
       - name: Proses Rakit APK
         run: |
