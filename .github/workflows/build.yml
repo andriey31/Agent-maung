@@ -12,9 +12,9 @@ jobs:
       - name: Pasang Alat Lengkap
         run: |
           sudo apt update -y
-          sudo apt install -y git zip unzip openjdk-17-jdk python3-pip build-essential libssl-dev zlib1g-dev
+          sudo apt install -y git zip unzip openjdk-17-jdk python3-pip build-essential libssl-dev zlib1g-dev libncurses5-dev libncursesw5-dev libtinfo5 libsqlite3-dev libgdbm-dev libdb5.3-dev libbz2-dev libreadline-dev libssl-dev liblzma-dev libffi-dev
           pip install --upgrade pip
-          pip install buildozer==1.4.0 cython==0.29.36
+          pip install buildozer==1.5.0 cython==3.0.11 kivy==2.3.0 flask==3.0.3
 
       - name: Buat Berkas Pengaturan
         run: |
@@ -24,15 +24,17 @@ jobs:
           package.name = agentmaung
           package.domain = com.maung.agent
           source.dir = .
-          source.include_exts = py,png,jpg
+          source.include_exts = py,png,jpg,ttf
           version = 1.0
-          requirements = python3,flask,requests,jinja2,markupsafe
+          requirements = python3,kivy,flask,jinja2,markupsafe,itsdangerous,click,blinker
           android.permissions = INTERNET, ACCESS_NETWORK_STATE
-          android.api = 33
-          android.ndk = 25b
+          android.api = 34
+          android.ndk = 26b
           android.archs = arm64-v8a, armeabi-v7a
           android.accept_sdk_license = True
           android.private_storage = True
+          android.enable_androidx = True
+          android.meta-data = android.allow_backup=true
           EOF
 
       - name: Proses Rakit APK
@@ -44,5 +46,5 @@ jobs:
         if: success()
         uses: actions/upload-artifact@v4
         with:
-          name: AGENT_MAUNG_BENAR
+          name: AGENT_MAUNG_FIX
           path: bin/*.apk
