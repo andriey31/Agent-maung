@@ -20,21 +20,22 @@ jobs:
         run: |
           cat > buildozer.spec << 'EOF'
           [app]
-          title = AGENT MAUNG
-          package.name = agentmaung
-          package.domain = com.maung.agent
-          source.dir = .
-          source.include_exts = py,png,jpg,ttf
-          version = 1.0
-          requirements = python3,kivy,flask,jinja2,markupsafe,itsdangerous,click,blinker
-          android.permissions = INTERNET, ACCESS_NETWORK_STATE
-          android.api = 34
-          android.ndk = 26b
-          android.archs = arm64-v8a, armeabi-v7a
-          android.accept_sdk_license = True
-          android.private_storage = True
-          android.enable_androidx = True
-          android.meta-data = android.allow_backup=true
+title = AGENT MAUNG BODAS
+package.name = maungbodas
+package.domain = com.maung.bodas
+source.dir = .
+source.include_exts = py,png,jpg,ttf  # <-- Pastikan ada tulisan png disini!
+version = 1.0
+requirements = python3,kivy,flask,jinja2,markupsafe,itsdangerous,click,blinker,android
+android.permissions = INTERNET, ACCESS_NETWORK_STATE, SYSTEM_ALERT_WINDOW
+android.api = 34
+android.ndk = 26b
+android.archs = arm64-v8a, armeabi-v7a
+android.accept_sdk_license = True
+android.orientation = portrait  # <-- Kunci layar tegak
+android.private_storage = True
+android.enable_androidx = True
+android.meta-data = android.allow_backup=true
           EOF
 
       - name: Proses Rakit APK
