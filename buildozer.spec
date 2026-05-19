@@ -11,4 +11,4 @@ android.api = 33
 android.ndk = 25b
 android.archs = arm64-v8a, armeabi-v7a
 android.accept_sdk_license = True
-android.sdk_path = /usr/lib/android-sdk
+# HAPUS BARIS android.sdk_path DAN android.ndk_path YANG LAMA, BIAR OTOMATIS
