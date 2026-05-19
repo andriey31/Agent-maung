@@ -3,27 +3,21 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-apk:
+  bikin_apk:
     runs-on: ubuntu-22.04
     steps:
-      - name: Ambil Kode
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Pasang Python & Alat
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.10'
-
-      - name: Pasang Paket Dasar
+      - name: Pasang Alat
         run: |
           sudo apt update -y
-          sudo apt install -y git zip unzip openjdk-17-jdk libssl-dev zlib1g-dev libffi-dev build-essential
-          python -m pip install --upgrade pip
+          sudo apt install -y git zip unzip openjdk-17-jdk python3-pip build-essential libssl-dev zlib1g-dev
+          pip install --upgrade pip
           pip install buildozer==1.5.0 cython==3.0.11
 
-      - name: Bikin Berkas Pengaturan
+      - name: Pengaturan
         run: |
-          cat > buildozer.spec << EOF
+          cat > buildozer.spec << 'EOF'
 [app]
 title = AGENT MAUNG
 package.name = agentmaung
@@ -39,14 +33,14 @@ android.archs = arm64-v8a, armeabi-v7a
 android.accept_sdk_license = True
 EOF
 
-      - name: Proses Rakit APK
+      - name: Proses Bikin
         run: |
           export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
           buildozer android debug --verbose
 
-      - name: Simpan Hasil
+      - name: Simpan
         if: success()
         uses: actions/upload-artifact@v4
         with:
-          name: AGENT_MAUNG_AKHIR
+          name: AGENT_MAUNG_BERHASIL
           path: bin/*.apk
