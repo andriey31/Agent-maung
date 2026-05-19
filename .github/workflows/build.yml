@@ -4,44 +4,26 @@ on:
 
 jobs:
   bikin_apk:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     steps:
-      - name: Ambil Kode
+      - name: Ambil kode dari Agent-maung
         uses: actions/checkout@v4
 
-      - name: Pasang Alat
+      - name: Pasang semua alat
         run: |
           sudo apt update -y
-          sudo apt install -y git zip unzip openjdk-17-jdk python3-pip build-essential libssl-dev zlib1g-dev
+          sudo apt install -y git zip unzip openjdk-17-jdk python3-pip autoconf libtool pkg-config zlib1g-dev libffi-dev libssl-dev build-essential
           pip install --upgrade pip
-          pip install buildozer==1.5.0 cython==3.0.11
+          pip install buildozer==1.5.0 cython==0.29.36
 
-      - name: Buat Pengaturan
+      - name: Proses bikin APK
         run: |
-          cat > buildozer.spec << 'EOF'
-[app]
-title = AGENT MAUNG
-package.name = agentmaung
-package.domain = com.maung.agent
-source.dir = .
-source.include_exts = py,png,jpg
-version = 1.0
-requirements = python3,flask,requests
-android.permissions = INTERNET, ACCESS_NETWORK_STATE
-android.api = 34
-android.ndk = 26b
-android.archs = arm64-v8a, armeabi-v7a
-android.accept_sdk_license = True
-EOF
+          export CFLAGS="-I/usr/include"
+          export LDFLAGS="-L/usr/lib"
+          buildozer android debug
 
-      - name: Proses Rakit
-        run: |
-          export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
-          buildozer android debug --verbose
-
-      - name: Simpan Hasil
-        if: success()
+      - name: Simpan hasilnya
         uses: actions/upload-artifact@v4
         with:
-          name: AGENT_MAUNG_BERHASIL
-          path: bin/*.apk
+          name: AGENT_MAUNG_APK
+          path: bin/agentmaung-debug.apk
