@@ -14,35 +14,51 @@ jobs:
           sudo apt update -y
           sudo apt install -y git zip unzip openjdk-17-jdk python3-pip
           pip install --upgrade pip
-          pip install buildozer==1.5.0 cython==3.0.11 kivy==2.3.0
+          pip install buildozer==1.5.0 cython==3.0.11 kivy==2.3.0 requests==2.32.3
 
-      - name: Buat Pengaturan Pas
+      - name: BUAT IKON KHUSUS (BIAR DI LUAR MUNCUL)
         run: |
+          mkdir -p res/drawable/
+          mkdir -p res/mipmap-hdpi/
+          mkdir -p res/mipmap-mdpi/
+          mkdir -p res/mipmap-xhdpi/
+          mkdir -p res/mipmap-xxhdpi/
+          mkdir -p res/mipmap-xxxhdpi/
+          
+          cp maung_bodas.png res/drawable/icon.png
+          cp maung_bodas.png res/mipmap-hdpi/ic_launcher.png
+          cp maung_bodas.png res/mipmap-mdpi/ic_launcher.png
+          cp maung_bodas.png res/mipmap-xhdpi/ic_launcher.png
+          cp maung_bodas.png res/mipmap-xxhdpi/ic_launcher.png
+          cp maung_bodas.png res/mipmap-xxxhdpi/ic_launcher.png
+
           cat > buildozer.spec << 'EOF'
           [app]
           title = AGENT MAUNG BODAS
           package.name = maungbodas
           package.domain = com.maung.bodas
           source.dir = .
-          source.include_exts = py,png
+          source.include_exts = py,png,json
           version = 1.0
           
-          # BAHAN DASAR (AMAN & RINGAN)
-          requirements = python3,kivy
-          android.permissions = INTERNET
+          # 🧠 BAHAN UNTUK AI
+          requirements = python3,kivy,requests
+          android.permissions = INTERNET, ACCESS_NETWORK_STATE
           android.api = 33
           android.minapi = 21
           android.ndk = 26b
           android.archs = arm64-v8a, armeabi-v7a
           android.accept_sdk_license = True
           
-          # KUNCI LAYAR TEGAK 100%
+          # 🔒 KUNCI LAYAR TEGAK
           orientation = portrait
           android.orientation = portrait
           
-          # 🔑 KUNCI UTAMA: IKON DIATUR DI SINI (WAJIB SAMA PERSIS)
-          android.icon = maung_bodas.png
-          android.icon_round = maung_bodas.png
+          # 🐅 IKON DI LUAR MENU HP
+          android.icon = res/drawable/icon.png
+          android.icon_round = res/drawable/icon.png
+          android.icon_foreground = res/drawable/icon.png
+          android.icon_background = "#000000"
           
           android.private_storage = True
           android.enable_androidx = False
@@ -56,5 +72,5 @@ jobs:
       - name: Simpan Hasil
         uses: actions/upload-artifact@v4
         with:
-          name: AGENT_MAUNG_ICON_BENAR
+          name: AGENT_MAUNG_AI_GEMINI
           path: bin/*.apk
