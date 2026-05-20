@@ -26,13 +26,24 @@ jobs:
           source.dir = .
           source.include_exts = py,png,jpg,ttf
           version = 1.0
+          
+          # 🔧 PENGATURAN PENTING
           requirements = python3,kivy,flask,jinja2,markupsafe,itsdangerous,click,blinker,android
-          android.permissions = INTERNET, ACCESS_NETWORK_STATE, SYSTEM_ALERT_WINDOW
-          android.api = 34
+          android.permissions = INTERNET, ACCESS_NETWORK_STATE, WRITE_EXTERNAL_STORAGE, READ_EXTERNAL_STORAGE
+          android.api = 33
+          android.minapi = 21
           android.ndk = 26b
           android.archs = arm64-v8a, armeabi-v7a
           android.accept_sdk_license = True
+          
+          # 🔒 KUNCI LAYAR TEGAK
+          orientation = portrait
           android.orientation = portrait
+          
+          # 🐅 IKON APLIKASI (GAMBAR MAUNG)
+          android.icon = maung_bodas.png
+          android.icon_round = maung_bodas.png
+          
           android.private_storage = True
           android.enable_androidx = True
           EOF
@@ -46,5 +57,5 @@ jobs:
         if: success()
         uses: actions/upload-artifact@v4
         with:
-          name: AGENT_MAUNG_FULL
+          name: AGENT_MAUNG_FIX_TOTAL
           path: bin/*.apk
