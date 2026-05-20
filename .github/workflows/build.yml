@@ -16,15 +16,21 @@ jobs:
           pip install --upgrade pip
           pip install buildozer==1.5.0 cython==3.0.11 kivy==2.3.0 requests==2.32.3
 
-      - name: Buat Semua Ukuran Ikon (Pasti Muncul)
+      - name: 🔥 BIKIN IKON LENGKAP - DIJAMIN MUNCUL DI MENU HP
         run: |
-          mkdir -p res/mipmap-mdpi/ res/mipmap-hdpi/ res/mipmap-xhdpi/ res/mipmap-xxhdpi/ res/mipmap-xxxhdpi/
-          convert maung_bodas.png -resize 48x48 res/mipmap-mdpi/ic_launcher.png
-          convert maung_bodas.png -resize 72x72 res/mipmap-hdpi/ic_launcher.png
-          convert maung_bodas.png -resize 96x96 res/mipmap-xhdpi/ic_launcher.png
+          mkdir -p res/mipmap-mdpi res/mipmap-hdpi res/mipmap-xhdpi res/mipmap-xxhdpi res/mipmap-xxxhdpi
+          
+          convert maung_bodas.png -resize 48x48  res/mipmap-mdpi/ic_launcher.png
+          convert maung_bodas.png -resize 72x72  res/mipmap-hdpi/ic_launcher.png
+          convert maung_bodas.png -resize 96x96  res/mipmap-xhdpi/ic_launcher.png
           convert maung_bodas.png -resize 144x144 res/mipmap-xxhdpi/ic_launcher.png
           convert maung_bodas.png -resize 192x192 res/mipmap-xxxhdpi/ic_launcher.png
+          
           convert maung_bodas.png -resize 192x192 res/mipmap-xxxhdpi/ic_launcher_round.png
+          cp res/mipmap-xxxhdpi/ic_launcher_round.png res/mipmap-xxhdpi/ic_launcher_round.png
+          cp res/mipmap-xxxhdpi/ic_launcher_round.png res/mipmap-xhdpi/ic_launcher_round.png
+          cp res/mipmap-xxxhdpi/ic_launcher_round.png res/mipmap-hdpi/ic_launcher_round.png
+          cp res/mipmap-xxxhdpi/ic_launcher_round.png res/mipmap-mdpi/ic_launcher_round.png
 
           cat > buildozer.spec << 'EOF'
           [app]
@@ -51,6 +57,7 @@ jobs:
           
           android.private_storage = True
           android.enable_androidx = False
+          android.use_androidx = False
           EOF
 
       - name: Proses Rakit APK
@@ -61,5 +68,5 @@ jobs:
       - name: Simpan Hasil
         uses: actions/upload-artifact@v4
         with:
-          name: AGENT_MAUNG_DESAIN_BARU
+          name: AGENT_MAUNG_AI_PASTI_HIDUP
           path: bin/*.apk
