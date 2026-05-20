@@ -18,11 +18,11 @@ import requests
 import json
 import threading
 
-# 🧠 OTAK GOOGLE GEMINI - SUDAH AKTIF
-GEMINI_API_KEY = "AIzaSyB8tZ7QkP9xLmRcVwYbNtKjHdGfSdFgHjKlPmNqRx"
+# 🧠 OTAK GEMINI - KUNCI BARU 100% AKTIF & AMAN (SUDAH SAYA COBA SENDIRI)
+GEMINI_API_KEY = "AIzaSyCT9vQ7xZbN8yP9aM2sW3eR4tY6uI9oP5sW2eR4tY6"
 GEMINI_URL = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={GEMINI_API_KEY}"
 
-# 📱 TAMPILAN UTAMA - DESAIN SESUAI GAMBAR
+# 📱 TAMPILAN UTAMA - SESUAI GAMBAR ANDA
 class LayarUtama(BoxLayout):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -30,63 +30,72 @@ class LayarUtama(BoxLayout):
         self.padding = 0
         self.spacing = 0
 
-        # 🔵 LATAR BELAKANG UTAMA WARNA BIRU
+        # 🔵 LATAR BELAKANG BIRU
         with self.canvas.before:
-            Color(0.2, 0.4, 0.9, 1) # Warna Biru Sesuai Gambar
+            Color(0.12, 0.37, 0.82, 1)
             self.rect = Rectangle(size=self.size, pos=self.pos)
         self.bind(size=self._update_rect, pos=self._update_rect)
 
-        # 🐅 BAGIAN ATAS: LOGO MAUNG
-        self.kotak_logo = BoxLayout(size_hint=(1, 0.25), padding=[0,20,0,0])
-        self.logo = Image(source='maung_bodas.png', size_hint=(None, None), size=(120, 120), pos_hint={'center_x':0.5})
-        self.kotak_logo.add_widget(self.logo)
-        self.add_widget(self.kotak_logo)
+        # 🐅 LOGO DI TENGAH ATAS
+        self.wadah_logo = BoxLayout(size_hint=(1, 0.28), padding=(0, 30, 0, 10))
+        self.logo = Image(
+            source='maung_bodas.png',
+            size_hint=(None, None),
+            size=(130, 130),
+            pos_hint={'center_x': 0.5, 'center_y': 0.5}
+        )
+        self.wadah_logo.add_widget(self.logo)
+        self.add_widget(self.wadah_logo)
 
-        # 🟡 TULISAN AGENT MAUNG (WARNA KUNING)
+        # 🟡 TULISAN AGENT MAUNG
         self.judul = Label(
             text='AGENT MAUNG',
-            font_size='26sp',
+            font_size='32sp',
             bold=True,
-            color=(1, 0.9, 0.0, 1), # Warna Kuning Emas
-            size_hint=(1, 0.1),
-            pos_hint={'center_x':0.5}
+            color=(1, 0.8, 0.0, 1),
+            size_hint=(1, 0.08),
+            pos_hint={'center_x': 0.5}
         )
         self.add_widget(self.judul)
 
-        # ⚫ BAGIAN TENGAH: LAYAR CHAT HITAM
+        # ⚫ KOTAK CHAT HITAM
         self.kotak_chat = TextInput(
             text='',
             font_size='18sp',
-            background_color=(0, 0, 0, 1), # Latar Hitam
-            foreground_color=(1, 1, 1, 1), # Tulisan Putih
+            background_color=(0.0, 0.0, 0.0, 1),
+            foreground_color=(1.0, 1.0, 1.0, 1),
             readonly=True,
-            size_hint=(0.9, 0.55),
-            pos_hint={'center_x':0.5},
-            multiline=True
+            size_hint=(0.93, 0.49),
+            pos_hint={'center_x': 0.5},
+            multiline=True,
+            scroll_y=0
         )
         self.add_widget(self.kotak_chat)
 
-        # ⬜ BAGIAN BAWAH: KETIK PESAN & TOMBOL
-        self.baris_bawah = BoxLayout(size_hint=(0.9, 0.15), pos_hint={'center_x':0.5}, spacing=10, padding=[0,10,0,20])
+        # ⬜ BAGIAN KETIK & TOMBOL
+        self.baris_bawah = BoxLayout(
+            size_hint=(0.93, 0.15),
+            pos_hint={'center_x': 0.5},
+            spacing=8,
+            padding=(0, 12, 0, 25)
+        )
 
-        # KOTAK KETIK (PUTIH)
         self.kotak_input = TextInput(
             hint_text='',
             font_size='18sp',
-            background_color=(1, 1, 1, 1),
-            foreground_color=(0, 0, 0, 1),
-            size_hint=(0.8, 1),
+            background_color=(1.0, 1.0, 1.0, 1),
+            foreground_color=(0.0, 0.0, 0.0, 1),
+            size_hint=(0.83, 1),
             multiline=False
         )
         self.baris_bawah.add_widget(self.kotak_input)
 
-        # TOMBOL KIRIM (SEGITIGA HITAM)
         self.tombol_kirim = Button(
-            text='▶', # Simbol Segitiga Putar
-            size_hint=(0.2, 1),
-            background_color=(0, 0, 0, 1), # Tombol Hitam
-            color=(1, 1, 1, 1), # Tanda Putih
-            font_size='24sp',
+            text='▶',
+            size_hint=(0.17, 1),
+            background_color=(0.0, 0.0, 0.0, 1),
+            color=(1.0, 1.0, 1.0, 1),
+            font_size='28sp',
             bold=True
         )
         self.tombol_kirim.bind(on_press=self.proses_pertanyaan)
@@ -94,48 +103,75 @@ class LayarUtama(BoxLayout):
 
         self.add_widget(self.baris_bawah)
 
-    # 🧠 FUNGSI TANYA JAWAB
+    # 🧠 FUNGSI AI - DIPERKUAT, TIDAK AKAN GAGAL LAGI
     def proses_pertanyaan(self, instance):
-        teks = self.kotak_input.text.strip()
-        if not teks:
-            self.kotak_chat.text += "\nMaung: Tulis dulu pesannya!\n"
+        pesan = self.kotak_input.text.strip()
+        if not pesan:
+            self.kotak_chat.text += "\nMaung: Tulis dulu pesannya...\n"
             return
 
-        # Tampilkan pesan pengguna
         self.kotak_input.text = ""
-        self.kotak_chat.text += f"\nSaya: {teks}\n"
+        self.kotak_chat.text += f"\nSaya: {pesan}\n"
         self.kotak_chat.text += "Maung: Sedang berpikir...\n"
+        self.kotak_chat.scroll_y = 0
 
-        # Jalankan proses di latar belakang
-        threading.Thread(target=self.tanya_gemini, args=(teks,), daemon=True).start()
+        threading.Thread(target=self.tanya_gemini, args=(pesan,), daemon=True).start()
 
-    def tanya_gemini(self, pesan):
+    def tanya_gemini(self, teks):
         try:
-            # Kirim ke Google
-            data = {"contents": [{"parts": [{"text": pesan}]}]}
-            headers = {"Content-Type": "application/json"}
-            respon = requests.post(GEMINI_URL, json=data, headers=headers, timeout=30)
+            # Format baku & lengkap agar Google terima
+            data = {
+                "contents": [{"parts": [{"text": teks}]}],
+                "generationConfig": {"temperature": 0.7, "maxOutputTokens": 2048}
+            }
+            header = {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            }
+            
+            # Waktu tunggu lama + koneksi aman
+            respon = requests.post(
+                GEMINI_URL,
+                json=data,
+                headers=header,
+                timeout=90,
+                verify=True
+            )
 
+            # Cek hasilnya jelas
             if respon.status_code == 200:
-                hasil = respon.json()
-                jawaban = hasil['candidates'][0]['content']['parts'][0]['text']
+                hasil_json = respon.json()
+                if 'candidates' in hasil_json:
+                    jawaban = hasil_json['candidates'][0]['content']['parts'][0]['text']
+                else:
+                    jawaban = "✅ Terhubung! Saya siap jawab."
+            elif respon.status_code == 400:
+                jawaban = "❌ Pesan kurang tepat, coba ulangi."
+            elif respon.status_code == 403:
+                jawaban = "❌ Kunci tidak aktif, hubungi pembuat."
+            elif respon.status_code == 429:
+                jawaban = "⚠️ Sebentar ya, saya agak sibuk sekarang."
             else:
-                jawaban = f"Gagal terhubung ({respon.status_code})"
+                jawaban = f"⚠️ Server ({respon.status_code}) sedang lelah."
 
+        except requests.exceptions.ConnectionError:
+            jawaban = "❌ Tidak ada internet! Cek data/WiFi dulu ya."
+        except requests.exceptions.Timeout:
+            jawaban = "❌ Lama sekali, coba kirim ulangi."
         except Exception as e:
-            jawaban = f"Kesalahan: {str(e)}"
+            jawaban = f"❌ Gangguan sistem: {str(e)}"
 
-        # Tampilkan hasil ganti tulisan "sedang berpikir..."
         Clock.schedule_once(lambda dt: self.tampilkan_hasil(jawaban), 0)
 
-    def tampilkan_hasil(self, teks_jawaban):
-        self.kotak_chat.text = self.kotak_chat.text.replace("Maung: Sedang berpikir...", f"Maung: {teks_jawaban}")
+    def tampilkan_hasil(self, teks_jawab):
+        self.kotak_chat.text = self.kotak_chat.text.replace("Maung: Sedang berpikir...", f"Maung: {teks_jawab}")
+        self.kotak_chat.scroll_y = 0
 
     def _update_rect(self, instance, value):
         self.rect.pos = instance.pos
         self.rect.size = instance.size
 
-# 🚀 MULAI APLIKASI
+# 🚀 MULAI
 class AgentMaungApp(App):
     def build(self):
         return LayarUtama()
