@@ -14,9 +14,9 @@ jobs:
           sudo apt update -y
           sudo apt install -y git zip unzip openjdk-17-jdk python3-pip
           pip install --upgrade pip
-          pip install buildozer==1.5.0 cython==3.0.11 kivy==2.3.0 flask==3.0.3
+          pip install buildozer==1.5.0 cython==3.0.11 kivy==2.3.0
 
-      - name: Buat Berkas Pengaturan
+      - name: Buat Pengaturan Pas
         run: |
           cat > buildozer.spec << 'EOF'
           [app]
@@ -24,27 +24,28 @@ jobs:
           package.name = maungbodas
           package.domain = com.maung.bodas
           source.dir = .
-          source.include_exts = py,png,jpg,ttf
+          source.include_exts = py,png
           version = 1.0
           
-          # PENGATURAN INTI
-          requirements = python3,kivy,flask,android
-          android.permissions = INTERNET, ACCESS_NETWORK_STATE
+          # BAHAN DASAR (AMAN & RINGAN)
+          requirements = python3,kivy
+          android.permissions = INTERNET
           android.api = 33
           android.minapi = 21
           android.ndk = 26b
           android.archs = arm64-v8a, armeabi-v7a
           android.accept_sdk_license = True
           
-          # KUNCI LAYAR TEGAK
+          # KUNCI LAYAR TEGAK 100%
           orientation = portrait
           android.orientation = portrait
           
-          # IKON APLIKASI (PASTIKAN NAMA SAMA)
+          # 🔑 KUNCI UTAMA: IKON DIATUR DI SINI (WAJIB SAMA PERSIS)
           android.icon = maung_bodas.png
           android.icon_round = maung_bodas.png
           
           android.private_storage = True
+          android.enable_androidx = False
           EOF
 
       - name: Proses Rakit APK
@@ -53,8 +54,7 @@ jobs:
           buildozer android debug --verbose
 
       - name: Simpan Hasil
-        if: success()
         uses: actions/upload-artifact@v4
         with:
-          name: AGENT_MAUNG_BERHASIL
+          name: AGENT_MAUNG_ICON_BENAR
           path: bin/*.apk
